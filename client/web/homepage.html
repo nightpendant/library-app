@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Library App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #3246d3;
+            --bg-gray: #f4f4f4;
+            --card-gray: #dadada;
+            --text-dark: #000;
+            --link-blue: #0000ee;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            background-color: #fff;
+            color: var(--text-dark);
+            padding-bottom: 70px; /* Space for bottom nav */
+            padding-top: 60px;    /* Space for header */
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 1000;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 4px;
+            padding: 4px 10px;
+            margin: 0 10px;
+        }
+
+        .search-container input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 16px;
+        }
+
+	/* New styles for the search dropdown */
+		.search-dropdown {
+			display: none; /* Hidden by default */
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			background-color: var(--card-gray);
+			border-radius: 0 0 4px 4px;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+			z-index: 1100;
+			overflow: hidden;
+		}
+
+		.search-dropdown button {
+			width: 100%;
+			padding: 12px;
+			border: none;
+			border-bottom: 1px solid #ccc;
+			background: none;
+			font-family: 'Courier Prime', monospace;
+			text-align: left;
+			cursor: pointer;
+			font-size: 14px;
+		}
+
+		.search-dropdown button:last-child {
+			border-bottom: none;
+		}
+
+		.search-dropdown button:active {
+			background-color: #bbb;
+		}
+
+        header i {
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* --- Layout Containers --- */
+        .page {
+            display: none;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background-color: var(--card-gray);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin-bottom: 5px;
+        }
+
+        .genre, .link-text {
+            color: var(--link-blue);
+        }
+
+        /* --- Specific UI Elements --- */
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .edit-btn {
+            background: #ccc;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .status-red { color: #d00; font-weight: bold; }
+        .status-blue { color: #00f; }
+        .status-green { color: #008a00; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--primary-blue);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-item.active {
+            background-color: #fff;
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+
+	<header>
+		<i class="fa-solid fa-magnifying-glass"></i>
+		<div class="search-container" style="position: relative;">
+			<input type="text" id="searchBar" placeholder="Search..." autocomplete="off">
+			
+			<div id="searchDropdown" class="search-dropdown">
+				<button onclick="handleSearch('books')">Search in Books</button>
+				<button onclick="handleSearch('users')">Search in Users</button>
+				<button onclick="handleSearch('lists')">Search in Lists</button>
+			</div>
+		</div>
+		<a href="settings.html"><i class="fa-solid fa-gear"></i></a>
+	</header>
+
+    <div id="home" class="page active">
+        <h2>Book of the Day</h2>
+        <div id="book-of-day-container"></div>
+
+        <h2 style="margin-top: 30px;">Full Catalogue:</h2>
+        <div id="catalogue-container">
+            <div class="card">
+                <h3>A Book that Starts with A</h3>
+                <p>by <span class="link-text">Aaron Abayari</span></p>
+                <p class="genre">Horror</p>
+            </div>
+            <div class="card">
+                <h3>Book that Starts with B</h3>
+                <p>by <span class="link-text">Bartholomew Bentley</span></p>
+                <p class="genre">Political Thriller</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile" class="page">
+        <div class="profile-header">
+            <h2>About Me</h2>
+            <div class="edit-btn"><i class="fa-solid fa-pencil" style="font-size: 14px;"></i></div>
+        </div>
+        <div id="bio-container" class="card"></div>
+
+        <h2>Book Lists</h2>
+        <div id="lists-container"></div>
+
+        <h2>Reviews</h2>
+        <div id="reviews-container"></div>
+    </div>
+
+    <div id="borrow" class="page">
+        <h2>Borrow Tracker</h2>
+        <div id="borrows-container"></div>
+
+        <h2 style="margin-top: 30px;">Wishlist Tracker</h2>
+        <div id="wishlist-container"></div>
+    </div>
+
+    <nav>
+        <div class="nav-item active" onclick="switchTab('home', this)">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile', this)">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="nav-item" onclick="switchTab('borrow', this)">
+            <i class="fa-solid fa-calendar-days"></i>
+        </div>
+    </nav>
+
+    <script>
+        /* --- MOCK FUNCTIONS --- */
+        // Replace logic inside here with your real implementations later
+
+        function getBookOfTheDay() {
+            return {
+                title: "The Crying of Lot 49",
+                author: "Thomas Pynchon",
+                genre: "Postmodernist Literature"
+            };
+        }
+
+        function getUserInfo() {
+            return {
+                bio: "I enjoy reading words written in the English language.",
+                book_lists: [
+                    { name: "for research", count: "12 Books" },
+                    { name: "personal to-read", count: "23 books" }
+                ],
+                reviews: [
+                    { title: "Crime and Punishment", stars: "★★★★★", snippet: "Dostoevsky is truly a master..." }
+                ]
+            };
+        }
+
+        function getUserBorrows() {
+            return {
+                borrows: [
+                    { title: "Symbolic Exchange and Death", status: "Due in 5 Days", statusClass: "status-red" },
+                    { title: "Fanged Noumena", status: "Due in 8 days", statusClass: "status-blue" }
+                ],
+                requests: [
+                    { title: "Modern Operating Systems", status: "Currently Borrowed", statusClass: "status-red" },
+                    { title: "Apocalypse Culture", status: "Available", statusClass: "status-green" }
+                ]
+            };
+        }
+
+        /* --- UI RENDERING LOGIC --- */
+
+        function renderHome() {
+            const book = getBookOfTheDay();
+            const container = document.getElementById('book-of-day-container');
+            container.innerHTML = `
+                <div class="card">
+                    <h3>${book.title}</h3>
+                    <p>by <span class="link-text">${book.author}</span></p>
+                    <p class="genre">${book.genre}</p>
+                </div>
+            `;
+        }
+
+        function renderProfile() {
+            const info = getUserInfo();
+            
+            // Render Bio
+            document.getElementById('bio-container').innerText = info.bio;
+
+            // Render Lists
+            const listsContainer = document.getElementById('lists-container');
+            listsContainer.innerHTML = info.book_lists.map(list => `
+                <div class="card">
+                    <h3>${list.name}</h3>
+                    <p class="status-blue">${list.count}</p>
+                </div>
+            `).join('');
+
+            // Render Reviews
+            const reviewsContainer = document.getElementById('reviews-container');
+            reviewsContainer.innerHTML = info.reviews.map(rev => `
+                <div class="card">
+                    <h3>${rev.title} ${rev.stars}</h3>
+                    <p>${rev.snippet}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderBorrows() {
+            const data = getUserBorrows();
+            
+            const borrowsContainer = document.getElementById('borrows-container');
+            borrowsContainer.innerHTML = data.borrows.map(item => `
+                <div class="card">
+                    <p>${item.title}</p>
+                    <p class="${item.statusClass}">${item.status}</p>
+                </div>
+            `).join('');
+
+            const wishlistContainer = document.getElementById('wishlist-container');
+            wishlistContainer.innerHTML = data.requests.map(item => `
+                <div class="card">
+                    <p>${item.title}</p>
+                    <p class="${item.statusClass}">${item.status}</p>
+                </div>
+            `).join('');
+        }
+		const searchBar = document.getElementById('searchBar');
+
+		const searchDropdown = document.getElementById('searchDropdown');
+
+		// Show dropdown when user types, hide if empty
+		searchBar.addEventListener('input', (e) => {
+			if (e.target.value.trim().length > 0) {
+				searchDropdown.style.display = 'block';
+			} else {
+				searchDropdown.style.display = 'none';
+			}
+		});
+
+		// Close dropdown if user clicks outside
+		window.addEventListener('click', (e) => {
+			if (!document.querySelector('.search-container').contains(e.target)) {
+				searchDropdown.style.display = 'none';
+			}
+		});
+
+		function handleSearch(type) {
+			const query = searchBar.value;
+			search(type, query);
+			
+			// Optional: Hide dropdown after selection
+			searchDropdown.style.display = 'none';
+		}
+
+		// Your actual search logic implementation
+		function search(type, query) {
+			// Encodes the query to handle spaces/special characters safely
+			console.log(`Searching in ${type} for: "${query}"`);
+			const url = `search_results.html?type=${encodeURIComponent(type)}&query=${encodeURIComponent(query)}`;
+			
+			// Redirect to the results page
+			window.location.href = url;
+		}
+        /* --- TAB NAVIGATION --- */
+
+        function switchTab(tabId, el) {
+            // Update Active Tab Link
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            el.classList.add('active');
+
+            // Update Active Page
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            // Re-render data for the specific tab
+            if (tabId === 'home') renderHome();
+            if (tabId === 'profile') renderProfile();
+            if (tabId === 'borrow') renderBorrows();
+        }
+
+        // Initial Load
+        window.onload = () => {
+            renderHome();
+            renderProfile();
+            renderBorrows();
+        };
+    </script>
+</body>
+</html>

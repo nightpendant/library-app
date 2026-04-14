@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      }
+      body {
+      background-image: url("./login_bg.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      overflow: hidden;
+      }
+      .login {
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      justify-items: center;
+      margin-top: 200px;
+      }
+      .login_info {
+      font-family: "Courier Prime", monospace;
+      font-style: italic;
+      margin-top: 20px;
+      font-size: 40px;
+      border: 3px solid black; /* Fixed shorthand */
+      border-radius: 15px;
+      padding: 20px;
+      background: white;
+      }
+      /* Container for the password and eye */
+      .password-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      }
+      .password-container input {
+      width: 100%;
+      padding-right: 70px; /* Make room for the eye so text doesn't overlap */
+      }
+      .toggle-password {
+      position: absolute;
+      right: 20px;
+      top: 55%; /* Centering tweak */
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 30px;
+      user-select: none;
+      }
+      .login_button {
+      width: 200px;
+      height: 90px;
+      margin-top: 30px;
+      cursor: pointer;
+      }
+      #logo_login {
+      width: 300px;
+      }
+    </style>
+    <script>
+      function login() {
+      	let email = document.getElementById("email").value;
+      	let password = document.getElementById("password").value;
+      	console.log("Email: ", email);
+      	console.log("Password: ", password);
+      	window.location.href="./homepage.html";
+      }
+      
+      function handlePasswordFocus(input) {
+      	if (input.value === 'Password: ') {
+      		input.value = '';
+      		input.type = 'password';
+      	}
+      }
+      
+      function handlePasswordBlur(input) {
+      	if (input.value === '') {
+      		input.type = 'text';
+      		input.value = 'Password: ';
+      	}
+      }
+      
+      function toggleVisibility() {
+      	const passwordField = document.getElementById("password");
+      	const eyeIcon = document.getElementById("eye-icon");
+      	
+      	if (passwordField.value !== "Password: ") {
+      		if (passwordField.type === "password") {
+      			passwordField.type = "text";
+      			eyeIcon.textContent = "🙈";
+      		} else {
+      			passwordField.type = "password";
+      			eyeIcon.textContent = "👁️";
+      		}
+      	}
+      }
+    </script>
+  </head>
+  <body>
+    <div class="login">
+      <img id="logo_login" src="./mainlogo.png">
+      <input class="login_info" id="email" type="email" value="Email: " onfocus="this.value=''">
+      <div class="password-container">
+        <input 
+          class="login_info" 
+          id="password" 
+          type="text" 
+          value="Password: " 
+          onfocus="handlePasswordFocus(this)" 
+          onblur="handlePasswordBlur(this)">
+        <span class="toggle-password" id="eye-icon" onclick="toggleVisibility()">👁️</span>
+      </div>
+      <button class="login_info login_button" onclick="login()">Log In</button>
+    </div>
+  </body>
+</html>

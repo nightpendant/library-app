@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Reusing your existing styles for consistency */
+        body { font-family: 'Courier Prime', monospace; padding: 20px; background: #fff; }
+        .header-back { display: flex; align-items: center; margin-bottom: 20px; gap: 15px; }
+        .card { background-color: #dadada; padding: 20px; margin-bottom: 15px; border-radius: 8px; }
+        .link-text { color: #0000ee; }
+        h1 { font-size: 1.2rem; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="header-back">
+        <a href="./homepage.html" style="color: black;"><i class="fa-solid fa-arrow-left"></i></a>
+        <h1 id="result-title">Results for...</h1>
+    </div>
+
+    <div id="results-list">
+        <p>Loading results...</p>
+    </div>
+
+    <script>
+        // 1. Get Params from URL
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type');
+        const query = params.get('query');
+
+        document.getElementById('result-title').innerText = `Results for "${query}" in ${type}`;
+
+        // 2. Mock API Call 
+        // In your real app, this would be: fetch(`yourapi.com/search?type=${type}&q=${query}`)
+        async function fetchResults(type, query) {
+            console.log(`API Call: Fetching ${type} matching "${query}"`);
+            
+            // Simulating an API response array
+            return [
+                { title: "Result Alpha", subtitle: "by Author A", meta: "Category X" },
+                { title: "Result Beta", subtitle: "by Author B", meta: "Category Y" },
+                { title: "Result Gamma", subtitle: "by Author C", meta: "Category Z" }
+            ];
+        }
+
+        // 3. Render the Array
+        async function renderResults() {
+            const data = await fetchResults(type, query);
+            const container = document.getElementById('results-list');
+            
+            if (data.length === 0) {
+                container.innerHTML = "<p>No results found.</p>";
+                return;
+            }
+
+            container.innerHTML = data.map(item => `
+                <div class="card">
+                    <h3>${item.title}</h3>
+                    <p>${item.subtitle}</p>
+                    <p class="link-text">${item.meta}</p>
+                </div>
+            `).join('');
+        }
+
+        renderResults();
+    </script>
+</body>
+</html>
