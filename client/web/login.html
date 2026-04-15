@@ -2,6 +2,7 @@
 <html>
   <head>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
       html, body {
       width: 100%;
@@ -93,10 +94,12 @@
       	if (passwordField.value !== "Password: ") {
       		if (passwordField.type === "password") {
       			passwordField.type = "text";
-      			eyeIcon.textContent = "🙈";
+				/* eyeIcon.textContent = "<i class='far fa-eye-slash'></i>"; */
+				eyeIcon.className = "far fa-eye-slash"
       		} else {
       			passwordField.type = "password";
-      			eyeIcon.textContent = "👁️";
+				/* eyeIcon.textContent = "<i class='far fa-eye'></i>"; */
+				eyeIcon.className = "far fa-eye"
       		}
       	}
       }
@@ -114,7 +117,7 @@
           value="Password: " 
           onfocus="handlePasswordFocus(this)" 
           onblur="handlePasswordBlur(this)">
-        <span class="toggle-password" id="eye-icon" onclick="toggleVisibility()">👁️</span>
+		<span class="toggle-password" onclick="toggleVisibility()"><i id="eye-icon" class="far fa-eye"></i></span>
       </div>
       <button class="login_info login_button" onclick="login()">Log In</button>
     </div>
