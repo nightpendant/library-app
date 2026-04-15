@@ -370,7 +370,6 @@
 
 		const searchDropdown = document.getElementById('searchDropdown');
 
-		// Show dropdown when user types, hide if empty
 		searchBar.addEventListener('input', (e) => {
 			if (e.target.value.trim().length > 0) {
 				searchDropdown.style.display = 'block';
@@ -379,7 +378,6 @@
 			}
 		});
 
-		// Close dropdown if user clicks outside
 		window.addEventListener('click', (e) => {
 			if (!document.querySelector('.search-container').contains(e.target)) {
 				searchDropdown.style.display = 'none';
@@ -390,31 +388,23 @@
 			const query = searchBar.value;
 			search(type, query);
 			
-			// Optional: Hide dropdown after selection
 			searchDropdown.style.display = 'none';
 		}
 
-		// Your actual search logic implementation
 		function search(type, query) {
-			// Encodes the query to handle spaces/special characters safely
 			console.log(`Searching in ${type} for: "${query}"`);
 			const url = `search_results.html?type=${encodeURIComponent(type)}&query=${encodeURIComponent(query)}`;
 			
-			// Redirect to the results page
 			window.location.href = url;
 		}
-        /* --- TAB NAVIGATION --- */
 
         function switchTab(tabId, el) {
-            // Update Active Tab Link
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             el.classList.add('active');
 
-            // Update Active Page
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
 
-            // Re-render data for the specific tab
             if (tabId === 'home') renderHome();
             if (tabId === 'profile') renderProfile();
             if (tabId === 'borrow') renderBorrows();
