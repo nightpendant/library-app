@@ -267,11 +267,18 @@
         /* --- MOCK FUNCTIONS --- */
         // Replace logic inside here with your real implementations later
 
-        function getBookOfTheDay() {
+        async function getBookOfTheDay() {
+			const response = await fetch("http://localhost:8000/book?id=day", {
+				method: "POST",
+			})
+
+			console.log(response)
+			let bookOfTheDay = await response.json()
+
             return {
-                title: "The Crying of Lot 49",
-                author: "Thomas Pynchon",
-                genre: "Postmodernist Literature"
+                title: bookOfTheDay.title,
+                author: bookOfTheDay.author,
+                genre: bookOfTheDay.genre
             };
         }
 
@@ -303,8 +310,8 @@
 
         /* --- UI RENDERING LOGIC --- */
 
-        function renderHome() {
-            const book = getBookOfTheDay();
+        async function renderHome() {
+            const book = await getBookOfTheDay();
             const container = document.getElementById('book-of-day-container');
             container.innerHTML = `
                 <div class="card">
